@@ -1,0 +1,211 @@
+# Quantity Selector
+
+A fully accessible, customizable quantity selector web component built from Figma design specifications. No framework required.
+
+## Demo
+
+Open `index.html` in a browser to see all size variants and states in action.
+
+## Specification
+
+- [Figma file – Upskill workshop](https://www.figma.com/design/0vbjlIGaYPTFiDxjrU8gCc/Upskill-workshop?node-id=1-102&t=XK9k40XXXyf7BVnp-1)
+
+## Features
+
+✅ **Three sizes**: Small (24px), Medium (32px), Large (40px)  
+✅ **Four states**: Enabled (collapsed), Range, Minimum (trash icon), Maximum (disabled plus)  
+✅ **Fully accessible** with ARIA attributes  
+✅ **Keyboard navigation**: Arrow keys, Home, End, Delete/Backspace  
+✅ **Custom events**: `change` and `remove`  
+✅ **Shadow DOM**: Encapsulated styles  
+✅ **Zero dependencies**: Pure vanilla JavaScript
+
+## Usage
+
+### Basic HTML
+
+```html
+<script type="module" src="./quantity-selector.js"></script>
+
+<quantity-selector 
+  size="medium" 
+  min="1" 
+  max="99" 
+  value="2">
+</quantity-selector>
+```
+
+### JavaScript
+
+```javascript
+// Get the element
+const selector = document.querySelector('quantity-selector');
+
+// Listen to changes
+selector.addEventListener('change', (e) => {
+  console.log('New value:', e.detail.value);
+  console.log('Previous value:', e.detail.previousValue);
+  console.log('Source:', e.detail.source); // 'increment', 'decrement', 'keyboard'
+});
+
+// Listen to remove events (when trash icon is clicked at minimum)
+selector.addEventListener('remove', () => {
+  console.log('Item removed');
+  // Remove from cart, etc.
+});
+
+// Programmatic control
+selector.value = 5;
+selector.increment();
+selector.decrement();
+```
+
+## Attributes / Properties
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `size` | `"small"` \| `"medium"` \| `"large"` | `"medium"` | Visual size variant |
+| `value` | `number` | `0` | Current value (0 = collapsed state) |
+| `min` | `number` | `1` | Minimum allowed value |
+| `max` | `number` | `99` | Maximum allowed value |
+| `step` | `number` | `1` | Increment/decrement step |
+| `disabled` | `boolean` | `false` | Disables all interactions |
+| `show-remove-at-min` | `boolean` | `true` | Show trash icon at minimum value |
+
+All attributes are also available as JavaScript properties:
+
+```javascript
+selector.value = 10;
+selector.min = 1;
+selector.max = 100;
+selector.size = 'large';
+selector.disabled = false;
+selector.showRemoveAtMin = true;
+```
+
+## Methods
+
+- `increment()` - Increase value by step amount
+- `decrement()` - Decrease value by step amount (or trigger remove at min)
+
+## Events
+
+### change
+
+Fired when the value changes. Event detail includes:
+
+```javascript
+{
+  value: number,           // New value
+  previousValue: number,   // Previous value
+  source: string          // 'increment', 'decrement', 'keyboard'
+}
+```
+
+### remove
+
+Fired when the decrement action occurs at minimum value with `show-remove-at-min` enabled. Use this to remove items from a cart or list.
+
+## States
+
+### Enabled (Collapsed) - `value="0"`
+Only the plus button is shown. First click expands to show the counter at minimum value.
+
+### Range - `value` between `min` and `max`
+Shows minus button, current value, and plus button.
+
+### Minimum - `value="1"` (or min value)
+Minus button becomes a trash icon. Click to trigger the `remove` event and collapse back to 0.
+
+### Maximum - `value="99"` (or max value)
+Plus button is disabled and grayed out. Cannot increment further.
+
+## Keyboard Shortcuts
+
+When focused on the value display:
+
+- **Arrow Up / Arrow Right**: Increment value
+- **Arrow Down / Arrow Left**: Decrement value
+- **Home**: Jump to minimum value
+- **End**: Jump to maximum value
+- **Delete / Backspace**: Trigger remove (when at minimum)
+
+## Accessibility
+
+The component is fully accessible:
+
+- Uses `role="spinbutton"` with proper ARIA attributes
+- Keyboard navigation support
+- Focus management with visible focus indicators
+- Screen reader friendly labels
+- Disabled state properly communicated
+
+ARIA attributes include:
+- `aria-valuemin`: Minimum value
+- `aria-valuemax`: Maximum value
+- `aria-valuenow`: Current value
+- `aria-valuetext`: Text representation
+- `aria-label`: Button labels
+
+## Styling
+
+The component uses Shadow DOM for style encapsulation. Customize with CSS custom properties:
+
+```css
+quantity-selector {
+  --qs-font-family: 'Figtree', sans-serif;
+  --qs-text-color: #141415;
+  --qs-border-color: #93949d;
+  --qs-btn-bg-enabled: rgba(255, 255, 255, 0.01);
+  --qs-btn-bg-hover: rgba(255, 255, 255, 0.05);
+  --qs-btn-bg-disabled: rgba(255, 255, 255, 0.01);
+  --qs-icon-color: #141415;
+  --qs-icon-disabled: rgba(20, 20, 21, 0.4);
+  --qs-radius-pill: 200px;
+}
+```
+
+### CSS Parts
+
+For advanced styling using `::part()`:
+
+```css
+quantity-selector::part(root) { /* root container */ }
+quantity-selector::part(container) { /* border container */ }
+quantity-selector::part(increment-button) { /* plus button */ }
+quantity-selector::part(decrement-button) { /* minus/trash button */ }
+quantity-selector::part(value) { /* number display */ }
+```
+
+## Size Reference
+
+| Size | Button | Container Height | Font Size | Icon Size |
+|------|--------|-----------------|-----------|-----------|
+| Small | 24×24px | 32px | 14px | 16px |
+| Medium | 32×32px | 32px | 16px | 24px |
+| Large | 40×40px | 40px | 16px | 24px |
+
+## Browser Support
+
+Works in all modern browsers supporting:
+- Web Components (Custom Elements v1)
+- Shadow DOM v1
+- ES6 Classes
+
+Tested in: Chrome, Firefox, Safari, Edge
+
+## Implementation Details
+
+- Built with vanilla JavaScript (no dependencies)
+- Uses Web Components API with Shadow DOM
+- Design tokens match Figma specifications
+- Figtree font (600 weight) for typography
+- SVG icons inline (no external assets)
+
+## Future Enhancements
+
+- [ ] Smooth transition animation for collapsed → expanded
+- [ ] Animated icon transitions (minus → trash)
+- [ ] Touch/swipe gestures for mobile
+- [ ] Haptic feedback on mobile devices
+- [ ] Optional input field for direct entry
