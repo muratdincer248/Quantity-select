@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quantity selector – demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --canvas: #f4f5f6; /* base/color/lowest */
+      }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: var(--canvas);
+        font-family: 'Figtree', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      }
+      .grid { display: grid; gap: 24px; grid-auto-flow: row; }
+      .row { display: flex; gap: 24px; align-items: center; }
+      .label { width: 80px; color: #7c3aed; font: 12px/1 Inter, system-ui, sans-serif; text-align: right; padding-right: 8px; }
+      .card { background: white; border-radius: 24px; padding: 24px 28px; box-shadow: 0 0 0 1px #9747ff40 inset; }
+    </style>
+    <script type="module" src="./quantity-selector.js"></script>
+  </head>
+  <body>
+    <div class="card">
+      <div class="grid">
+        <div class="row">
+          <div class="label">Small</div>
+          <quantity-selector size="small" min="1" max="99" value="2"></quantity-selector>
+          <quantity-selector size="small" min="1" max="99" value="1"></quantity-selector>
+          <quantity-selector size="small" min="1" max="99" value="99"></quantity-selector>
+          <quantity-selector size="small" min="1" max="99" value="0"></quantity-selector>
+        </div>
+        <div class="row">
+          <div class="label">Medium</div>
+          <quantity-selector size="medium" min="1" max="99" value="2"></quantity-selector>
+          <quantity-selector size="medium" min="1" max="99" value="1"></quantity-selector>
+          <quantity-selector size="medium" min="1" max="99" value="99"></quantity-selector>
+          <quantity-selector size="medium" min="1" max="99" value="0"></quantity-selector>
+        </div>
+        <div class="row">
+          <div class="label">Large</div>
+          <quantity-selector size="large" min="1" max="99" value="2"></quantity-selector>
+          <quantity-selector size="large" min="1" max="99" value="1"></quantity-selector>
+          <quantity-selector size="large" min="1" max="99" value="99"></quantity-selector>
+          <quantity-selector size="large" min="1" max="99" value="0"></quantity-selector>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('change', (e) => {
+        if (e.target.tagName === 'QUANTITY-SELECTOR') {
+          console.log('quantity change', e.detail);
+        }
+      });
+      document.addEventListener('remove', (e) => {
+        if (e.target.tagName === 'QUANTITY-SELECTOR') {
+          console.log('quantity remove', e.target);
+        }
+      });
+    </script>
+  </body>
+  </html>
+
+
